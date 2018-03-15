@@ -4,7 +4,7 @@ const bluebird = require('bluebird');
 const ReadStream = require('./readStream.js');
 
 let fullUrls = [];
-const dbSize = 100000;
+const dbSize = 10000000;
 
 function initialize() {
   faker.seed(123);
@@ -37,5 +37,9 @@ function createUrlArray() {
 }
 
 initialize();
+
+/* Becca: After the json file is created, run the following command from the db folder:
+  mongoimport -d wegot -c restaurants --file data/output.json
+*/
 
 exports.dbSize = dbSize;

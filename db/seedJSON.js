@@ -20,13 +20,13 @@ function initialize() {
 
 function createAllRestaurants(){
   var rs = new ReadStream(dbSize);
-  const file = fs.createWriteStream('./data/output.json');
+  const file = fs.createWriteStream('./db/data/output.json');
   rs.pipe(file);
 }
 
 function createUrlArray() {
   return new Promise(function(resolve, reject){
-    fs.readFile('./data/fullUrls.txt', 'utf8', function(err, data) {
+    fs.readFile('./db/data/fullUrls.txt', 'utf8', function(err, data) {
       if(err){
         reject(err);
       } else {

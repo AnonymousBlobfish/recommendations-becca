@@ -12,12 +12,6 @@ var Restaurant = function(id){
   this.photos = this.createImages();
   this.short_description = faker.lorem.words(10);
   this.neighborhood = faker.lorem.words(3);
-  this.location = {
-    lat: faker.address.latitude(),
-    long: faker.address.longitude()
-  };
-  this.address = `${faker.address.streetAddress()}, ${faker.address.city()}, ${faker.address.stateAbbr()} ${faker.address.zipCode()}, USA`,
-  this.website = faker.internet.url(),
   this.price_level = faker.random.number(4),
   this.types = this.createType(),
   this.nearby = this.createNearby()
@@ -26,7 +20,7 @@ var Restaurant = function(id){
 Restaurant.prototype.createType = function(){
   const types = ["Bar", "Bar", "Bar", "Restaurant", "Restaurant", "Restaurant", "Restaurant", "Restaurant", "Food", "Food", "Food Delivery"];
   const rdmIdx = Math.floor(Math.random() * types.length);
-  return [types[rdmIdx]];
+  return types[rdmIdx];
 }
 
 Restaurant.prototype.createNearby = function(){

@@ -18,26 +18,7 @@ ReadStream.prototype._read = function() {
     }
     var data = new FakerModel(this.id++);
 
-    if(seedDataFile.dbType === 'MySQL'){ // Creating csv file for MySQL
-      if(this.id === 1){ // Create header
-        for(var key in data){
-          this.push(JSON.stringify(key) + '\t');
-          if(key === 'nearby'){
-            this.push('\n');
-            break;
-          }
-        }
-      }
-      for(var key in data){
-        if(typeof data[key] !== 'function'){
-          this.push(JSON.stringify(data[key]) + '\t');
-        }
-      }
-      this.push('\n');
-
-    } else if (seedDataFile.dbType === 'Mongo'){ // Creating json file for Mongo
-      this.push(JSON.stringify(data));
-    }
+    this.push(JSON.stringify(data));
 };
 
 module.exports = ReadStream;

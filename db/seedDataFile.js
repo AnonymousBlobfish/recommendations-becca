@@ -4,7 +4,8 @@ const bluebird = require('bluebird');
 const ReadStream = require('./readStream.js');
 
 let fullUrls = [];
-const dbSize = 10000000;
+const dbSize = 10;
+const dbType = 'MySQL' || 'Mongo';
 
 function initialize() {
   faker.seed(123);
@@ -19,8 +20,11 @@ function initialize() {
 }
 
 function createAllRestaurants(){
-  var rs = new ReadStream(dbSize);
-  const file = fs.createWriteStream('./db/data/output.json');
+  const rs = new ReadStream(dbSize);
+  const file = fs.createWriteStream('./db/data/output.csv');
+  if (dbType === 'Mongo'){
+    file = fs.createWriteStream('./db/data/output.json');
+  }
   rs.pipe(file);
 }
 
@@ -43,3 +47,5 @@ initialize();
 */
 
 exports.dbSize = dbSize;
+exports.dbType = dbType;
+// exports.fullUrls set above in initialize after createUrlArray complete

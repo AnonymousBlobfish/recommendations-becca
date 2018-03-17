@@ -12,7 +12,7 @@ var Restaurant = function(id){
   this.short_description = faker.lorem.words(10);
   this.neighborhood = faker.lorem.words(3);
   this.price_level = faker.random.number(4);
-  this.types = this.createType();
+  this.type = this.createType();
   this.photos = this.createImages();
   this.nearby = this.createNearby();
 };

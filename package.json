@@ -48,6 +48,7 @@
     "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
     "faker": "^4.1.0",
     "jest": "^22.4.2",
+    "json2csv-stream": "^0.1.4",
     "nodemon": "^1.11.0",
     "style-loader": "^0.20.2",
     "webpack": "^3.11"

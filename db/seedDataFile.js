@@ -4,33 +4,22 @@ const bluebird = require('bluebird');
 const ReadStream = require('./readStream.js');
 const Json2Csv = require('json2csv-stream');
 const transforms = require('./transformPhotos.js');
+fs.readFile = bluebird.promisify(fs.readFile);
 
 let fullUrls = [];
-const dbSize = 100;
+const dbSize = 10000000;
 const dbType = 'MySQL' || 'Mongo';
 
 function initialize() {
   faker.seed(123);
-  createUrlArray()
+  fs.readFile('./db/data/fullUrls.txt', 'utf8')
     .then(function(data){
-      fullUrls = data;
-      exports.fullUrls = fullUrls;
+      data = data.split(', ');
+      exports.fullUrls = data;
       createAllRestaurants();
     }).catch(function(err){
       console.log(err);
     });
-}
-
-function createUrlArray() {
-  return new Promise(function(resolve, reject){
-    fs.readFile('./db/data/fullUrls.txt', 'utf8', function(err, data) {
-      if(err){
-        reject(err);
-      } else {
-        resolve(data.split(', '));
-      }
-    });
-  })
 }
 
 function createAllRestaurants(){
@@ -51,14 +40,18 @@ function createSqlCsv(){
   createNearbysCsv(jsonRs);
 }
 
+/* Once these CSV files are created, you can load them into mySql with a command like this:
+      load data local infile '<filepath>/db/data/outputNearbys.csv' into table wegot.nearbys fields terminated by '\t' lines terminated by '\n';
+*/
+
 function createRestCsv(jsonRs){
-  const jsonWs = fs.createWriteStream('./db/data/outputRests.csv');
+  const csvWs = fs.createWriteStream('./db/data/outputRests.csv');
   var parser = new Json2Csv({
     del: '\t',
     keys: ['place_id', 'name', 'google_rating', 'zagat_food_rating', 'review_count', 'short_description', 'neighborhood', 'price_level', 'type'],
     showHeader: false
   });
-  jsonRs.pipe(parser).pipe(jsonWs);
+  jsonRs.pipe(parser).pipe(csvWs);
 }
 
 function createPhotosCsv(jsonRs){

@@ -12,9 +12,10 @@ const lineReader = require('readline').createInterface({
 });
 
 lineReader.on('line', function (line) {
-  const strippedURI = line.replace(/\s/g, '');
-  const fullUrl = `https://d11h7stelz8497.cloudfront.net/${strippedURI}, `;
-  fs.appendFile('./fullUrls.txt', fullUrl, function (err) {
+  let strippedURI = line.replace(/\s/g, '');
+  strippedURI += ', ';
+  // const fullUrl = `https://d11h7stelz8497.cloudfront.net/${strippedURI}, `;
+  fs.appendFile('./fullUrls.txt', strippedURI, function (err) {
     if (err) throw err;
   });
 });

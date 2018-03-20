@@ -39,7 +39,7 @@ function createUrlArray() {
 initialize();
 
 /* Becca: After the json file is created, run the following command from the db folder:
-  mongoimport -d wegot -c restaurants --file data/output.json
+  mongoimport -d wegot -c restaurants --file db/data/output.json --numInsertionWorkers 4
 */
 
 exports.dbSize = dbSize;

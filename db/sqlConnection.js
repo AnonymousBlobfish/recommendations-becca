@@ -4,7 +4,7 @@ exports.connection = function() {
   var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'test123',
+    password: 'test1234',
     database: 'wegot'
   });
 

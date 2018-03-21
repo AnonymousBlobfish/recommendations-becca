@@ -95,6 +95,7 @@ body{
   letter-spacing: .05em;
   margin: 5px 0;
   font-weight: 300;
+  text-transform: capitalize;
 }
 .restaurant-card-details-ratings{
   letter-spacing: .05em;

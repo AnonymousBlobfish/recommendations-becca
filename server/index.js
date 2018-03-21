@@ -28,6 +28,8 @@ app.get('/api/restaurants/:id/recommendations', function (req, res) {
       console.log(err);
     } else{
       // console.log("restaurant info:",data);
+      console.log(data);
+      console.log(data[0]);
       var nearbyArr = data[0].nearby;
       // console.log(nearbyArr);
       results.push(data[0]);

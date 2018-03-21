@@ -15,7 +15,9 @@
     "test": "jest",
     "start": "node ./server/index.js",
     "dockertest": "npm run seed-database && npm start",
-    "docker": "DB_ADDRESS=database npm run seed-database && DB_ADDRESS=database npm start"
+    "docker": "DB_ADDRESS=database npm run seed-database && DB_ADDRESS=database npm start",
+    "seed": "time node db/seedJSON.js && bash db/importToDB.sh",
+    "seed-without-idx": "time node db/seedJSON.js && time mongoimport -d wegot -c restaurants --file db/data/output.json --numInsertionWorkers 4"
   },
   "dependencies": {
     "axios": "^0.18.0",

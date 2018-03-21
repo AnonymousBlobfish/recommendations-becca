@@ -26,9 +26,10 @@ function createAllRestaurants(){
   const rs = new ReadStream(dbSize);
   const file = fs.createWriteStream('./db/data/output.json');
   rs.pipe(file);
-  if (dbType === 'MySQL'){
-    createSqlCsv();
-  }
+  // Comment out above and comment in below and rerun when output.json is completely done
+  // if (dbType === 'MySQL'){
+  //   createSqlCsv();
+  // }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,7 @@ function createRestCsv(jsonRs){
   const csvWs = fs.createWriteStream('./db/data/outputRests.csv');
   var parser = new Json2Csv({
     del: '\t',
-    keys: ['place_id', 'name', 'google_rating', 'zagat_food_rating', 'review_count', 'short_description', 'neighborhood', 'price_level', 'type'],
+    keys: ['restaurant_id', 'name', 'google_rating', 'zagat_food_rating', 'review_count', 'short_description', 'neighborhood', 'price_level', 'type'],
     showHeader: false
   });
   jsonRs.pipe(parser).pipe(csvWs);
@@ -58,7 +59,7 @@ function createPhotosCsv(jsonRs){
   const csvWs = fs.createWriteStream('./db/data/outputPhotos.csv');
   const parser = new Json2Csv({
     del: '\t',
-    keys: ['place_id', 'photos'],
+    keys: ['restaurant_id', 'photos'],
     showHeader: false
   });
   jsonRs.pipe(parser).pipe(transforms.parsePhotos).pipe(csvWs);
@@ -68,7 +69,7 @@ function createNearbysCsv(jsonRs){
   const csvWs = fs.createWriteStream('./db/data/outputNearbys.csv');
   const parser = new Json2Csv({
     del: '\t',
-    keys: ['place_id', 'nearby'],
+    keys: ['restaurant_id', 'nearby'],
     showHeader: false
   });
   jsonRs.pipe(parser).pipe(transforms.parseNearbys).pipe(csvWs);

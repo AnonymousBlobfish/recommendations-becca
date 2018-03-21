@@ -4,7 +4,7 @@ const seedJSON = require('./../seedDataFile.js');
 let imageIdx = 0;
 
 var Restaurant = function(id){
-  this.place_id = id;
+  this.restaurant_id = id;
   this.name = faker.company.companyName();
   this.google_rating = faker.finance.amount(0,5,1);
   this.zagat_food_rating = faker.finance.amount(0,5,1);

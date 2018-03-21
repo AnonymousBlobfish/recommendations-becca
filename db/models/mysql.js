@@ -9,121 +9,58 @@ const restaurants = {
           console.log(err); // Should send back 500
           reject(err);
         } else {
+          console.log(results);
           resolve(results);
         }
       });
     });
   },
 
-  findOneExtendedWithPhotos: function(restaurant_id){
+  findOneExtended: function(restaurant_id){
     return new Promise(function(resolve, reject){
-      con.query(`SELECT * FROM restaurants WHERE restaurant_id = ${restaurant_id};`, function(err, result) {
+      con.query(`SELECT * FROM restaurants WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
         if (err) {
           console.log(err); // Should send back 500
           reject(err);
         } else {
-          console.log('result of search for nearby restaurant info is ', result);
-          // let nearbyRestIdresult[0].restaurant_id;
-          console.log('restaurant Id is ', result[0].restaurant_id);
-          photos.find(result[0].restaurant_id)
-            .then(photoUrls => {
-              let photoArr = [];
-              for (var i = 0; i < photoUrls.length; i++){
-                photoArr.push(photoUrls[i].photo_url);
-              }
-              result.photos = photoArr;
-              resolve(result);
-              // if(i === (nearbyRests.length - 1)){
-              //   console.log('resolved');
-              //   resolve(nearbyRests);
-              // }
-              // console.log('nearbyRest length is... ', nearbyRests.length);
-            }).catch(err => {
-              reject(err);
-            })
-          // resolve(results);
+          resolve(results);
         }
       });
     });
   },
 
   findManyRestaurants: function(restaurantArr){
-    return new Promise(function(resolve, reject){
-      // let restIdsString = '(';
-      // for (var i = 0; i < restaurantArr.length; i++){
-      //   restIdsString += '"' + restaurantArr[i].nearby_id + '"';
-      //   if(i !== restaurantArr.length - 1){
-      //     restIdsString += ', ';
-      //   }
-      // }
-      // restIdsString += ')';
-      // console.log('restIdsString is ', restIdsString);
-      console.log(restaurantArr[0].nearby_id);
+    var nearbyResults = [];
+    var getNearbyPromises = [];
+    restaurantArr.forEach( restToNearbyPair => {
+      var nearbyId = restToNearbyPair.nearby_id;
+      var nearbyPromise = restaurants.findOneExtendedWithPhotos(nearbyId);
+      getNearbyPromises.push(nearbyPromise);
+    })
+    return Promise.all(getNearbyPromises).then(function(resultsArr){
+      resultsArr.forEach(nearbyResult => {
+        nearbyResults.push(nearbyResult[0]);
+      })
+      return nearbyResults;
+    });
+  },
 
-      var nearbyResults = [];
-
-      restaurants.findOneExtendedWithPhotos(50)
-        .then(result1 => {
-          console.log('result after first call is ', result1);
-          nearbyResults.push(result1);
-          restaurants.findOneExtendedWithPhotos(40)
-            .then(result2 => {
-              nearbyResults.push(result2);
-            });
-        }).then(() => {
-          restaurants.findOneExtendedWithPhotos(30)
-            .then(result3 => {
-              nearbyResults.push(result3);
-            });
-        }).then(() => {
-          restaurants.findOneExtendedWithPhotos(20)
-            .then(result4 => {
-              nearbyResults.push(result4);
-            });
-        }).then(() => {
-          restaurants.findOneExtendedWithPhotos(10)
-            .then(result5 => {
-              nearbyResults.push(result5);
-            });
-        }).then(() => {
-          restaurants.findOneExtendedWithPhotos(60)
-            .then(result6 => {
-              nearbyResults.push(result6);
-              resolve(nearbyResults)
-            });
-        }).catch(err => {
-          console.log(err);
-        })
-      // con.query(`SELECT * FROM restaurants WHERE restaurant_id IN ${restIdsString};`, function(err, nearbyRests) {
-      //   if (err) {
-      //     console.log(err); // Should send back 500
-      //     reject(err);
-      //   } else {
-      //     console.log(nearbyRests);
-      //     for (var i = 0; i < nearbyRests.length; i++){
-      //       photos.find(nearbyRests[i].restaurant_id)
-      //         .then(photoUrls => {
-      //           let photoArr = [];
-      //           for (var i = 0; i < photoUrls.length; i++){
-      //             photoArr.push(photoUrls[i].photo_url);
-      //           }
-      //           nearbyRests[i].photos = photoArr;
-      //           if(i === (nearbyRests.length - 1)){
-      //             console.log('resolved');
-      //             resolve(nearbyRests);
-      //           }
-      //           console.log('nearbyRest length is... ', nearbyRests.length);
-      //         }).catch(err => {
-      //           reject(err);
-      //         })
-      //     }
-      //     // console.log('resolve');
-      //     // resolve(nearbyRests);
-      //   }
-      // });
+  findOneExtendedWithPhotos: function(restaurant_id){
+    let photoArr = [];
+    var findPhotos = photos.find(restaurant_id);
+    var findRestExtended = findPhotos.then(function(findPhotosResult) {
+        for (var i = 0; i < findPhotosResult.length; i++){
+          photoArr.push(findPhotosResult[i].photo_url);
+        }
+        return restaurants.findOneExtended(restaurant_id);
+    });
+    return Promise.all([findPhotos, findRestExtended]).then(function([findPhotosResult, findRestExtendedResult]) {
+        findRestExtendedResult[0].photos = photoArr;
+        return findRestExtendedResult;
     });
   }
 }
+
 
 const nearbys = {
   find: function(restaurant_id){

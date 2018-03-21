@@ -23,18 +23,17 @@ app.get('/api/restaurants/:id/recommendations', function (req, res) {
     .then(data => {
       data = data[0]; // Necessary to get data from RowDataPacket
       results.push(data);
-      // res.status(200);
-      // res.send(results);
       mySqlModels.findNearbys(data.restaurant_id)
         .then(nearbyArr => {
-          console.log(nearbyArr);
           mySqlModels.findManyRestaurants(nearbyArr)
             .then(nearbyData => {
-              console.log(nearbyData);
               results.push(nearbyData);
               res.status(200);
               res.send(results);
             })
+        }).catch(err => {
+          res.status(500);
+          console.log(err);
         });
     }).catch(err => {
       res.status(500);

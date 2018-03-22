@@ -2,11 +2,13 @@ config:
   target: 'http://localhost:3004'
   processor: "./my-functions.js"
   phases:
-    - duration: 60
+    - duration: 10
       arrivalRate: 50
 scenarios:
   - name: "load restaurant page"
     flow:
       - function: "generateRandomData"
-      - get:
-          url: "/api/restaurants/{{randomId}}/recommendations"
+      - loop:
+        - get:
+            url: "/api/restaurants/{{randomId}}/recommendations"
+        count: 100

@@ -1,12 +1,14 @@
 var mysql = require('mysql');
 
-exports.connection = function() {
-  var connection = mysql.createConnection({
+exports.pool = function() {
+  var pool = mysql.createPool({
+    connectionLimit: 100,
+    multipleStatements: true,
     host: 'localhost',
     user: 'root',
     password: 'test1234',
     database: 'wegot'
   });
 
-  return connection;
+  return pool;
 };

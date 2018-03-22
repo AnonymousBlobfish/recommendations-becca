@@ -45,12 +45,17 @@ const restaurants = {
 
   findOneExtended: function(restaurant_id, conn){
     return new Promise(function(resolve, reject){
-      conn.query(`SELECT * FROM restaurants WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
+      conn.query(`SELECT * FROM restaurants2 WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
         if (err) {
           console.log(err); // Should send back 500
           reject(err);
         } else {
-          resolve(results);
+          // console.log(results);
+          // console.log('photos string is ', results[0].photos);
+          // console.log('split ', results[0].photos.split(','));
+          results[0].photos = results[0].photos.split(',');
+          // console.log('modified ', results[0]);
+          resolve(results[0]);
         }
       });
     });
@@ -61,32 +66,35 @@ const restaurants = {
     var getNearbyPromises = [];
     restaurantArr.forEach( restToNearbyPair => {
       var nearbyId = restToNearbyPair.nearby_id;
-      var nearbyPromise = restaurants.findOneExtendedWithPhotos(nearbyId, conn);
+      // var nearbyPromise = restaurants.findOneExtendedWithPhotos(nearbyId, conn);
+      // var nearbyId = 1;
+      var nearbyPromise = restaurants.findOneExtended(nearbyId, conn);
       getNearbyPromises.push(nearbyPromise);
     })
     return Promise.all(getNearbyPromises).then(function(resultsArr){
       resultsArr.forEach(nearbyResult => {
-        nearbyResults.push(nearbyResult[0]);
+        nearbyResults.push(nearbyResult);
       })
       return nearbyResults;
     });
   },
-
-  findOneExtendedWithPhotos: function(restaurant_id, conn){
-    let photoArr = [];
-    var findPhotos = photos.find(restaurant_id, conn);
-    var findRestExtended = findPhotos.then(function(findPhotosResult) {
-        for (var i = 0; i < findPhotosResult.length; i++){
-          photoArr.push(findPhotosResult[i].photo_url);
-        }
-        return restaurants.findOneExtended(restaurant_id, conn);
-    });
-    return Promise.all([findPhotos, findRestExtended]).then(function([findPhotosResult, findRestExtendedResult]) {
-        findRestExtendedResult[0].photos = photoArr;
-        return findRestExtendedResult;
-    });
-  }
 }
+
+//   findOneExtendedWithPhotos: function(restaurant_id, conn){
+//     let photoArr = [];
+//     var findPhotos = photos.find(restaurant_id, conn);
+//     var findRestExtended = findPhotos.then(function(findPhotosResult) {
+//         for (var i = 0; i < findPhotosResult.length; i++){
+//           photoArr.push(findPhotosResult[i].photo_url);
+//         }
+//         return restaurants.findOneExtended(restaurant_id, conn);
+//     });
+//     return Promise.all([findPhotos, findRestExtended]).then(function([findPhotosResult, findRestExtendedResult]) {
+//         findRestExtendedResult[0].photos = photoArr;
+//         return findRestExtendedResult;
+//     });
+//   }
+// }
 
 
 const nearbys = {
@@ -104,23 +112,23 @@ const nearbys = {
   }
 }
 
-const photos = {
-  find: function(restaurant_id, conn){
-    return new Promise(function(resolve, reject){
-      conn.query(`SELECT photo_url FROM photos WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
-        if (err) {
-          console.log(err); // Should send back 500 somehow;
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-  }
-}
+// const photos = {
+//   find: function(restaurant_id, conn){
+//     return new Promise(function(resolve, reject){
+//       conn.query(`SELECT photo_url FROM photos WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
+//         if (err) {
+//           console.log(err); // Should send back 500 somehow;
+//           reject(err);
+//         } else {
+//           resolve(results);
+//         }
+//       });
+//     });
+//   }
+// }
 
 exports.findOneRestaurant = restaurants.findOneBasic;
 exports.findManyRestaurants = restaurants.findManyRestaurants;
 exports.findNearbys = nearbys.find;
-exports.findPhotos = photos.find;
+// exports.findPhotos = photos.find;
 exports.retrieveRestAndNearbys = initialize.init;

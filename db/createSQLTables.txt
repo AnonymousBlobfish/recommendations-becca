@@ -1,4 +1,4 @@
-CREATE TABLE restaurants (
+CREATE TABLE restaurants2 (
     restaurant_id  int(11) NOT NULL,
     name varchar(50) NOT NULL,
     google_rating decimal(2,1) NOT NULL,
@@ -8,6 +8,7 @@ CREATE TABLE restaurants (
     neighborhood varchar(55) NOT NULL,
     price_level varchar(1) NOT NULL,
     type varchar(15) NOT NULL,
+    photos varchar(255) NOT NULL,
     PRIMARY KEY (restaurant_id)
 );
 

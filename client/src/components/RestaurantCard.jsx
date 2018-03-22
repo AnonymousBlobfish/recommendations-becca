@@ -6,7 +6,7 @@ const RestaurantCard = (props) => {
   const {restaurant} = props;
 
   return(
-    <div className="restaurant-card" onClick={props.switchRestaurant.bind(this,restaurant.place_id)}>
+    <div className="restaurant-card" onClick={props.switchRestaurant.bind(this,restaurant.restaurant_id)}>
       <PhotoCarousel photos={restaurant.photos} />
       <RestaurantDetails restaurant={restaurant} />
     </div>

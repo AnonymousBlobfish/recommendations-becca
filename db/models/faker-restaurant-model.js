@@ -40,7 +40,8 @@ Restaurant.prototype.createImages = function(){
     imageIdx = (++imageIdx < imageUrlCount) ? ++imageIdx : 0;
     images.push(seedJSON.fullUrls[imageIdx]);
   }
-  return images;
+  // console.log(images.join());
+  return images.join();
 }
 
 Restaurant.prototype.createUrlArray = function() {

@@ -8,7 +8,5 @@ scenarios:
   - name: "load restaurant page"
     flow:
       - function: "generateRandomData"
-      - loop:
-        - get:
-            url: "/api/restaurants/{{randomId}}/recommendations"
-        count: 100
+      - get:
+          url: "/api/restaurants/{{randomId}}/recommendations"

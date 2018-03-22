@@ -7,7 +7,7 @@ const initialize = {
       pool.getConnection(function(err, conn){
         if(err){
           conn.release();
-          console.log(err); // Send back 500?
+          // console.log(err); // Send back 500?
           reject(err);
         }
         if(conn){
@@ -34,7 +34,7 @@ const restaurants = {
     return new Promise(function(resolve, reject){
       conn.query(`SELECT name FROM restaurants WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
         if (err) {
-          console.log(err); // Should send back 500
+          // console.log(err); // Should send back 500
           reject(err);
         } else {
           resolve(results[0]);
@@ -47,9 +47,13 @@ const restaurants = {
     return new Promise(function(resolve, reject){
       conn.query(`SELECT * FROM restaurants2 WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
         if (err) {
-          console.log(err); // Should send back 500
+          // console.log(err); // Should send back 500
           reject(err);
         } else {
+          if(!results.length){
+            reject(err);
+            return;
+          }
           // console.log(results);
           // console.log('photos string is ', results[0].photos);
           // console.log('split ', results[0].photos.split(','));
@@ -102,7 +106,7 @@ const nearbys = {
     return new Promise(function(resolve, reject){
       conn.query(`SELECT * FROM nearbys WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
         if (err) {
-          console.log(err); // Should send back 500 somehow;
+          // console.log(err); // Should send back 500 somehow;
           reject(err);
         } else {
           resolve(results);

@@ -30,7 +30,7 @@ Restaurant.prototype.createNearby = function(){
     const randomNum = faker.random.number(seedJSON.dbSize);
     nearby.push(randomNum);
   }
-  return nearby;
+  return nearby.join();
 }
 
 Restaurant.prototype.createImages = function(){

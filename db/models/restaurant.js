@@ -13,17 +13,17 @@ var restaurantSchema = mongoose.Schema({
   address: String,
   website: String,
   price_level: Number,
-  types: [String],
+  type: [String],
   nearby: [String]
 });
 
 var RestaurantModel = mongoose.model('Restaurant', restaurantSchema);
 
-// findAll retrieves all stories
-function findAll(callback) {
-  console.log('finding all!');
-  RestaurantModel.find({}, callback);
-}
+// // findAll retrieves all stories
+// function findAll(callback) {
+//   console.log('finding all!');
+//   RestaurantModel.find({}, callback);
+// }
 
 // findOne will retrieve the restaurant associated with the given id
 function findOne(id, callback) {
@@ -32,10 +32,10 @@ function findOne(id, callback) {
 }
 
 // insertOne inserts a restaurant into the db
-function insertOne(restaurant, callback) {
-  console.log('inserting one restaurant');
-  RestaurantModel.create(restaurant, callback);
-}
+// function insertOne(restaurant, callback) {
+//   console.log('inserting one restaurant');
+//   RestaurantModel.create(restaurant, callback);
+// }
 
 // retrieve many restaurants
 function findMany(ids, callback) {
@@ -49,7 +49,7 @@ function count(){
 
 exports.RestaurantModel = RestaurantModel;
 exports.findOne = findOne;
-exports.findAll = findAll;
-exports.insertOne = insertOne;
+// exports.findAll = findAll;
+// exports.insertOne = insertOne;
 exports.findMany = findMany;
 exports.count = count;

@@ -1,0 +1,25 @@
+CREATE TABLE restaurants (
+    restaurant_id  int(11) NOT NULL,
+    name varchar(50) NOT NULL,
+    google_rating decimal(2,1) NOT NULL,
+    zagat_food_rating decimal(2,1) NOT NULL,
+    review_count smallint(6) NOT NULL,
+    short_description varchar(150) NOT NULL,
+    neighborhood varchar(55) NOT NULL,
+    price_level varchar(1) NOT NULL,
+    type varchar(15) NOT NULL,
+    PRIMARY KEY (restaurant_id)
+);
+
+CREATE TABLE photos (
+    restaurant_id int(11) NOT NULL,
+    photo_url varchar(75) NOT NULL,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id)
+);
+
+CREATE TABLE nearbys (
+    restaurant_id int(11) NOT NULL,
+    nearby_id int(11) NOT NULL,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id),
+    FOREIGN KEY (nearby_id) REFERENCES restaurants(restaurant_id)
+);

@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "root",
+    "password": "test1234",
+    "database": "wegot",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}

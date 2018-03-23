@@ -63,3 +63,5 @@ client/dist/bundle.js.map
 
 #api key
 config.js
+
+newrelic.js

@@ -20,37 +20,14 @@ app.use('/restaurants/:id', express.static(path.join(__dirname, '../client/dist'
 
 app.get('/api/restaurants/:id/recommendations', function (req, res) {
   var placeId = req.params.id || 0;
-  console.log("GET " + req.url);
   // find recommended restaurants based on id
-  var results = [];
-  restaurants.findOne(placeId, (err, data)=> {
-    if(err){
+  restaurants.initialize(placeId)
+    .then(results => {
+      res.status(200);
+      res.send(results);
+    }).catch(err => {
       res.status(500);
-      console.log(err);
-    } else{
-      // console.log("restaurant info:",data);
-      console.log(data);
-      console.log(data[0]);
-      var nearbyArr = data[0].nearby;
-      // console.log(nearbyArr);
-      results.push(data[0]);
-
-      restaurants.findMany(nearbyArr, (err, data)=> {
-        if(err){
-          res.status(500);
-          console.log(err);
-        } else{
-          // console.log("recommended restaurants:", data);
-          results.push(data)
-          // console.log("number of recommended: " + data.length);
-          res.status(200);
-          // res.send(data);
-          // console.log(results.length);
-          res.send(results);
-        }
-      });
-    }
-  });
+    });
 });
 
 

@@ -17,39 +17,44 @@ var restaurantSchema = mongoose.Schema({
   nearby: [String]
 });
 
+var nearbySchema = mongoose.Schema({
+  name: String,
+  place_id: { type: Number, unique: true },
+  nearby: [String]
+});
+
 var RestaurantModel = mongoose.model('Restaurant', restaurantSchema);
+var NearbyModel = mongoose.model('Nearby', nearbySchema);
 
-// findAll retrieves all stories
-function findAll(callback) {
-  console.log('finding all!');
-  RestaurantModel.find({}, callback);
+function initialize(place_id){
+  return new Promise(function(resolve, reject){
+    var result = [];
+    findNearbyIds(place_id, function(err, nearbyIdResults){
+      if(err){
+        reject(err);
+      } else {
+        result.push(nearbyIdResults[0]);
+        findMany(nearbyIdResults[0].nearby, function(err, nearbyData){
+          if(err){
+            reject(err);
+          } else {
+            result.push(nearbyData);
+            resolve(result);
+          }
+        });
+      }
+    });
+  });
 }
 
-// findOne will retrieve the restaurant associated with the given id
-function findOne(id, callback) {
-  console.log("find " + id);
-  RestaurantModel.find({place_id: id}, callback);
-}
-
-// insertOne inserts a restaurant into the db
-function insertOne(restaurant, callback) {
-  console.log('inserting one restaurant');
-  RestaurantModel.create(restaurant, callback);
+function findNearbyIds(place_id, callback){
+  NearbyModel.find({place_id: place_id}, callback);
 }
 
 // retrieve many restaurants
 function findMany(ids, callback) {
-  console.log('find 6 nearby restaurants');
   RestaurantModel.find({place_id: {$in: ids}}, callback);
 }
 
-function count(){
-  return RestaurantModel.count();
-}
-
 exports.RestaurantModel = RestaurantModel;
-exports.findOne = findOne;
-exports.findAll = findAll;
-exports.insertOne = insertOne;
-exports.findMany = findMany;
-exports.count = count;
+exports.initialize = initialize;

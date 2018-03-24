@@ -31,7 +31,7 @@ const initialize = {
 const restaurants = {
   findOneBasic: function(restaurant_id, conn){
     return new Promise(function(resolve, reject){
-      conn.query(`SELECT name, nearby FROM restaurants WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
+      conn.query(`SELECT name, nearby FROM nearby WHERE restaurant_id = ${restaurant_id};`, function(err, results) {
         if (err) {
           reject(err);
         } else {

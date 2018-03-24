@@ -7,7 +7,7 @@ const transforms = require('./transformPhotos.js');
 fs.readFile = bluebird.promisify(fs.readFile);
 
 let fullUrls = [];
-const dbSize = 10000000;
+const dbSize = 10030000;
 const dbType = 'MySQL' || 'Mongo';
 
 function initialize() {
@@ -37,6 +37,7 @@ function createAllRestaurants(){
 function createSqlCsv(){
   const jsonRs = fs.createReadStream('./db/data/output.json');
   createRestCsv(jsonRs);
+  createNearbyCsv(jsonRs);
 }
 
 /* Once these CSV files are created, you can load them into mySql with a command like this:
@@ -47,7 +48,17 @@ function createRestCsv(jsonRs){
   const csvWs = fs.createWriteStream('./db/data/outputRests.csv');
   var parser = new Json2Csv({
     del: '\t',
-    keys: ['restaurant_id', 'name', 'google_rating', 'zagat_food_rating', 'review_count', 'short_description', 'neighborhood', 'price_level', 'type', 'photos', 'nearby'],
+    keys: ['restaurant_id', 'name', 'google_rating', 'zagat_food_rating', 'review_count', 'short_description', 'neighborhood', 'price_level', 'type', 'photos'],
+    showHeader: false
+  });
+  jsonRs.pipe(parser).pipe(csvWs);
+}
+
+function createNearbyCsv(jsonRs){
+  const csvWs = fs.createWriteStream('./db/data/outputNearby.csv');
+  var parser = new Json2Csv({
+    del: '\t',
+    keys: ['restaurant_id', 'name', 'nearby'],
     showHeader: false
   });
   jsonRs.pipe(parser).pipe(csvWs);

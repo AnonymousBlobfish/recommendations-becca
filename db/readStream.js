@@ -13,11 +13,11 @@ util.inherits(ReadStream, Readable);
 
 ReadStream.prototype._read = function() {
     if (this.id === this.dbSize) {
-        return this.push(null);
+      return this.push(null);
+    } else {
+      var data = new FakerModel(this.id++);
+      this.push(JSON.stringify(data));
     }
-    // console.log("pushed: ", this.id + 1);
-    var data = new FakerModel(this.id++);
-    this.push(JSON.stringify(data));
 };
 
 module.exports = ReadStream;

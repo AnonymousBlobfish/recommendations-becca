@@ -20,11 +20,9 @@ app.use('/restaurants/:id', express.static(path.join(__dirname, '../client/dist'
 
 app.get('/api/restaurants/:id/recommendations', function (req, res) {
   var placeId = req.params.id || 0;
-  console.log(uri);
   // find recommended restaurants based on id
   restaurants.initialize(placeId)
     .then(results => {
-      console.log('results ', results);
       res.status(200);
       res.send(results);
     }).catch(err => {

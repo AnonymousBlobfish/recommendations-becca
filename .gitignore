@@ -65,3 +65,5 @@ client/dist/bundle.js.map
 config.js
 
 newrelic.js
+
+wegot*.pem

@@ -5,6 +5,13 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 
+const redis = require('redis');
+const client = redis.createClient();
+
+client.on('error', function (err) {
+    console.log("Error " + err);
+});
+
 var restaurants = require('../db/models/restaurant.js');
 var mongoose = require('mongoose');
 const dbAddress = process.env.DB_ADDRESS || 'localhost';
@@ -20,15 +27,28 @@ app.use('/restaurants/:id', express.static(path.join(__dirname, '../client/dist'
 
 app.get('/api/restaurants/:id/recommendations', function (req, res) {
   var placeId = req.params.id || 0;
-  // find recommended restaurants based on id
-  restaurants.initialize(placeId)
-    .then(results => {
-      res.status(200);
-      res.send(results);
-    }).catch(err => {
-      console.log('error ', err);
-      res.status(500);
-    });
+
+  client.get(placeId, function(error, cacheResult) {
+    if(error){
+      console.log(error);
+    }
+    if(cacheResult){
+      var cacheObj = JSON.parse(cacheResult);
+      console.log('used cache result for ', placeId);
+      res.send(cacheObj);
+    } else {
+      // find recommended restaurants based on id
+      restaurants.initialize(placeId)
+        .then(results => {
+          client.setex(placeId, 500, JSON.stringify(results));
+          res.status(200);
+          res.send(results);
+        }).catch(err => {
+          console.log('error ', err);
+          res.status(500);
+        });
+    }
+  });
 });
 
 

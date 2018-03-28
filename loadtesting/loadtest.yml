@@ -1,9 +1,10 @@
 config:
-  target: 'http://localhost:3004'
+  target: 'http://54.215.119.119:3004'
+  # target: 'http://localhost:3004'
   processor: "./my-functions.js"
   phases:
     - duration: 60
-      arrivalRate: 50
+      arrivalRate: 10
 scenarios:
   - name: "load restaurant page"
     flow:
@@ -11,4 +12,9 @@ scenarios:
       - loop:
         - get:
             url: "/api/restaurants/{{randomId}}/recommendations"
-        count: 100
+        count: 80
+      - function: "generateLessRandomId"
+      - loop:
+        - get:
+            url: "/api/restaurants/{{lessRandomId}}/recommendations"
+        count: 20

@@ -40,9 +40,9 @@ app.get('/api/restaurants/:id/recommendations', function (req, res) {
       // find recommended restaurants based on id
       restaurants.initialize(placeId)
         .then(results => {
-          client.setex(placeId, 500, JSON.stringify(results));
           res.status(200);
           res.send(results);
+          client.setex(placeId, 500, JSON.stringify(results));
         }).catch(err => {
           console.log('error ', err);
           res.status(500);

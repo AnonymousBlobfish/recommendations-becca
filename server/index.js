@@ -34,6 +34,7 @@ app.get('/api/restaurants/:id/recommendations', function (req, res) {
     }
     if(cacheResult){
       var cacheObj = JSON.parse(cacheResult);
+      res.status(200);
       res.send(cacheObj);
     } else {
       // find recommended restaurants based on id
